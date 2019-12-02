@@ -14,11 +14,19 @@ const GameContextProvider = (props) => {
         {hometeam:'Rockets', homepts:145, awayteam:'Bucks', awaypts:100, id:7}
     ]);
 
+    const[match,setMatch] = useState(games[Math.floor(Math.random()*games.length)]);
+
     const removeGame= (id) => {
         setGames(games.filter(game => game.id !== id));
     };
+
+    const chooseNewMatch = () =>{
+        let chosengame=games[Math.floor(Math.random()*games.length)]
+        setMatch(chosengame)
+    }
+
     return (
-        <GameContext.Provider value={{games,removeGame}}>
+        <GameContext.Provider value={{games,removeGame,match, chooseNewMatch}}>
             {props.children}
         </GameContext.Provider>
     )
