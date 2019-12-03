@@ -22,7 +22,11 @@ const GameContextProvider = (props) => {
             {hometeam:'Suns', homeId:9, homepts:145, awayteam:'Celtics', awayId:2,awaypts:100, id:7,date:'2019-12-01'}]
 
     const firstmatch= games[Math.floor(Math.random()*games.length)]
-    const firstwinner=firstmatch.homepts> firstmatch.awaypts ? {chosenId:firstmatch.homeId, chosenTeam:firstmatch.hometeam} :{chosenId:firstmatch.awayId, chosenTeam:firstmatch.awayteam}
+    const firstwinner=firstmatch.homepts> firstmatch.awaypts ? {chosenId:firstmatch.homeId, chosenpt:firstmatch.homepts, chosenTeam:firstmatch.hometeam} :{chosenId:firstmatch.awayId, chosenpt:firstmatch.awaypts, chosenTeam:firstmatch.awayteam}
+    const firstloser=firstmatch.homepts< firstmatch.awaypts ? {chosenId:firstmatch.homeId, chosenpt:firstmatch.homepts, chosenTeam:firstmatch.hometeam} :{chosenId:firstmatch.awayId, chosenpt:firstmatch.awaypts, chosenTeam:firstmatch.awayteam}
+
+    const loc = firstmatch.homepts>firstmatch.awaypts ?{winner:'home',loser:'away'} : {winner:'away',loser:'home'};
+
     const teamList=[
         {teamId:1, teamName:'Lakers'},
         {teamId:2, teamName:'Celtics'},
@@ -42,14 +46,20 @@ const GameContextProvider = (props) => {
     }
     newChoices.sort(() => Math.random() - 0.5);
 
-
+    
     const[match,setMatch] = useState(firstmatch);
 
     const[winner,setWinner] = useState(firstwinner);
 
+    const[loser,setLoser] = useState(firstloser);
+
+    const[location,setLocation] = useState(loc);
+
     const[choices,setChoices]= useState(newChoices);
 
     const[outcome,setOutcome]= useState(false);
+
+    const[ans,setAns]=useState('');
 
     // const initMatch = (games) => {
     //     setMatch(games[Math.floor(Math.random()*games.length)])
@@ -76,24 +86,28 @@ const GameContextProvider = (props) => {
     const checkGame= (selChoice) => {
         if(selChoice.teamId ===winner.chosenId){
             console.log('u won');
-            setOutcome(true);   
+            setOutcome(true);  
+            setAns('') 
     } else{
-        removeChoice(selChoice);
+        // removeChoice(selChoice);
+        setChoices(choices.filter(choice => choice.teamId !==selChoice.teamId))
+        let tempAns=ans? ans+'!':'Incorrect!'
+        setAns(tempAns)
         console.log(selChoice.teamId);
         console.log(winner.chosenId);
     };
     }
 
-    const removeChoice = (wrongChoice) =>{
-        console.log('wrong choice');
-        setChoices(choices.filter(choice => choice.teamId !==wrongChoice.teamId))
+    // const removeChoice = (wrongChoice) =>{
+    //     console.log('wrong choice');
+        
 
-    }
+    // }
     
 
 
     return (
-        <GameContext.Provider value={{match,winner,choices,removeChoice,checkGame,outcome}}>
+        <GameContext.Provider value={{match,winner,choices,location,setOutcome,checkGame,loser,ans,outcome}}>
             {props.children}
         </GameContext.Provider>
     )
