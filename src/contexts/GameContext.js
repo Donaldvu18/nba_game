@@ -28,19 +28,19 @@ const GameContextProvider = (props) => {
     const loc = firstmatch.homepts>firstmatch.awaypts ?{winner:'home',loser:'away'} : {winner:'away',loser:'home'};
 
     const teamList=[
-        {teamId:1, teamName:'Lakers'},
-        {teamId:2, teamName:'Celtics'},
-        {teamId:3, teamName:'Bulls'},
-        {teamId:4, teamName:'Pacers'},
-        {teamId:5, teamName:'Thunder'},
-        {teamId:6, teamName:'Warriors'},
-        {teamId:7, teamName:'Jazz'},
-        {teamId:8, teamName:'Pelicans'},
-        {teamId:9, teamName:'Suns'}]
+        {teamId:1, teamName:'Lakers' ,visible:true},
+        {teamId:2, teamName:'Celtics', visible:true},
+        {teamId:3, teamName:'Bulls', visible:true},
+        {teamId:4, teamName:'Pacers', visible:true},
+        {teamId:5, teamName:'Thunder', visible:true},
+        {teamId:6, teamName:'Warriors', visible:true},
+        {teamId:7, teamName:'Jazz', visible:true},
+        {teamId:8, teamName:'Pelicans', visible:true},
+        {teamId:9, teamName:'Suns', visible:true}]
 
 
     let tempList = teamList.filter(team => team.teamId !== firstwinner.chosenId)
-    let newChoices=[{teamId:firstwinner.chosenId, teamName:firstwinner.chosenTeam}]
+    let newChoices=[{teamId:firstwinner.chosenId, teamName:firstwinner.chosenTeam ,visible:true}]
     for (let i = 0 ; i<5 ;i++){
         newChoices.push(tempList[Math.floor(Math.random()*tempList.length)])
     }
@@ -60,7 +60,7 @@ const GameContextProvider = (props) => {
     const[outcome,setOutcome]= useState(false);
 
     const[ans,setAns]=useState('');
-
+    
     // const initMatch = (games) => {
     //     setMatch(games[Math.floor(Math.random()*games.length)])
     // }
@@ -98,6 +98,22 @@ const GameContextProvider = (props) => {
     };
     }
 
+    const checkVisible= (selChoice) => {
+        if(selChoice.teamId ===winner.chosenId){
+            console.log('u won');
+            setOutcome(true);  
+            setAns('') 
+    } else{
+        // removeChoice(selChoice);
+        // newlist=choices.filter(choice => choice.teamId !==selChoice.teamId)
+        // newlist.push({...selChoice,visible:false})
+        let tempAns=ans? ans+'!':'Incorrect!'
+        setAns(tempAns)
+        // console.log(newlist);
+        console.log(winner.chosenId);
+    };
+    }
+
     // const removeChoice = (wrongChoice) =>{
     //     console.log('wrong choice');
         
@@ -107,7 +123,7 @@ const GameContextProvider = (props) => {
 
 
     return (
-        <GameContext.Provider value={{match,winner,choices,location,setOutcome,checkGame,loser,ans,outcome}}>
+        <GameContext.Provider value={{match,winner,choices,location,setOutcome,checkVisible,checkGame,setAns,setOutcome,loser,ans,outcome}}>
             {props.children}
         </GameContext.Provider>
     )
